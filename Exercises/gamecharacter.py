@@ -1,5 +1,6 @@
 import pygame
 import sys
+from rocketship import Rocket
 
 
 class GameCharacter:
@@ -27,8 +28,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((800, 600))
         self.screen_rect = self.screen.get_rect()
-        self.snail = GameCharacter(self)
 
+        # Change this to change the icon that shows up.
+        self.player_image = Rocket(self)
 
         pygame.display.set_caption("Game")
 
@@ -37,6 +39,7 @@ class Game:
         while True:
             # Watch for keyboard and mouse events
             self._check_events()
+            self.player_image.update()
             self._update_screen()
             self.clock.tick(60)
 
@@ -45,11 +48,42 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                self._check_keydown_events(event)
+            elif event.type == pygame.KEYUP:
+                self._check_keyup_events(event)
+
+
+    def _check_keydown_events(self, event):
+        """Check for keyboard presses."""
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                self.player_image.moving_left = True
+            elif event.key == pygame.K_RIGHT:
+                self.player_image.moving_right = True
+            elif event.key == pygame.K_UP:
+                self.player_image.moving_up = True
+            elif event.key == pygame.K_DOWN:
+                self.player_image.moving_down = True
+            elif event.key == pygame.K_q:
+                sys.exit()
+
+    def _check_keyup_events(self, event):
+        """Check for keyboard releases."""
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                self.player_image.moving_left = False
+            elif event.key == pygame.K_RIGHT:
+                self.player_image.moving_right = False
+            elif event.key == pygame.K_UP:
+                self.player_image.moving_up = False
+            elif event.key == pygame.K_DOWN:
+                self.player_image.moving_down = False
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill('white')
-        self.snail.blithe()
+        self.player_image.blithe()
 
         pygame.display.flip()
 
