@@ -11,11 +11,11 @@ class Rocket:
         self.rocket_speed = 1
 
         # Load the character and get its rect.
-        self.image = pygame.image.load('../images/ship.bmp')
+        self.image = pygame.transform.rotate(pygame.image.load('../images/ship.bmp'), 270)
         self.rect = self.image.get_rect()
 
         # Start the character in the middle of the screen at the bottom of the window.
-        self.rect.center = self.screen_rect.center
+        self.rect.midleft = self.screen_rect.midleft
 
         # Store a float for the ship's exact horizontal positon.
         self.x = self.rect.x
@@ -38,7 +38,6 @@ class Rocket:
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.y += self.rocket_speed
         if self.moving_up and self.rect.top > 0:
-            # print(self.moving_down, self.screen_rect.top)
             self.y -= self.rocket_speed
 
         self.rect.x = self.x
