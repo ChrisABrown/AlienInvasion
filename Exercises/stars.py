@@ -1,6 +1,8 @@
 import sys
 import pygame
+from pygame import FULLSCREEN
 from pygame.sprite import Sprite
+from random import randint
 
 
 class Star(Sprite):
@@ -12,6 +14,7 @@ class Star(Sprite):
 
         self.image = pygame.image.load('../images/retro_star.png')
         self.rect = self.image.get_rect()
+        self.size = self.image.get_size()
 
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -23,11 +26,12 @@ class Stars:
     """Class to set up Exercise 13-1"""
     def __init__(self):
         """Initialize the game and set up resources"""
+
         pygame.init()
         self.clock = pygame.time.Clock()
-        screen_height = 800
-        screen_width = 600
-        self.screen = pygame.display.set_mode((screen_height, screen_width))
+        self.screen = pygame.display.set_mode((0, 0), FULLSCREEN)
+        self.screen_width = self.screen.get_rect().width
+        self.screen_height = self.screen.get_rect().height
 
         pygame.display.set_caption('Stars')
 
@@ -39,7 +43,6 @@ class Stars:
         while True:
             self._create_stars()
             self.check_events()
-            self._create_stars()
             self._update_screen()
             self.clock.tick(60)
 
@@ -69,14 +72,25 @@ class Stars:
     def _create_stars(self):
         """Create the stars"""
         star = Star(self)
-        self.stars.add(star)
+        star_width, star_height = star.rect.size
+        current_x, current_y = star_width, star_height
+        random_num = randint(-10, 10)
 
-    def _create_star(self, x, y):
+        while current_y < (self.screen_height * star_height / random_num):
+            while current_x < (self.screen_width * star_width / random_num):
+                self._create_star(current_x, current_y)
+                current_x += 1 * star_width
+
+            current_x = star_width
+            current_y += 1 * star_height
+
+    def _create_star(self, x_position, y_position):
         """Create the star"""
         new_star = Star(self)
-        new_star.x = x
-        new_star.rect.x = x
-        new_star.rect.y = y
+        new_star.x = x_position
+        new_star.rect.x = x_position
+        new_star.rect.y = y_position
+        self.stars.add(new_star)
 
 if __name__ == '__main__':
     game = Stars()

@@ -13,9 +13,8 @@ class AlienInvasion:
         pygame.init()
         self.clock = pygame.time.Clock()
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((800, 600))
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+
 
         pygame.display.set_caption("Alien Invasion")
 
@@ -31,8 +30,8 @@ class AlienInvasion:
             # Watch for keyboard and mouse events
             self._check_events()
             self.ship.update()
-            self._update__bullets()
-            self._create_fleet()
+            self._update_bullets()
+            self._update_aliens()
             self._update_screen()
             self.clock.tick(60)
 
@@ -57,7 +56,7 @@ class AlienInvasion:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
-    def _update__bullets(self):
+    def _update_bullets(self):
         """Update position of bullets and get rid of old bullets."""
         self.bullets.update()
 
@@ -85,15 +84,9 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
-    def _update_screen(self):
-        """Update images on the screen, and flip to the new screen."""
-        self.screen.fill(self.settings.bg_color)
-        for bullet in self.bullets.sprites():
-            bullet.draw_bullet()
-        self.ship.blitme()
-        self.aliens.draw(self.screen)
-
-        pygame.display.flip()
+    def _update_aliens(self):
+        """Update the position of all the aliens in the fleet."""
+        self.aliens.update()
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
@@ -120,6 +113,17 @@ class AlienInvasion:
         new_alien.rect.y = y_position
         self.aliens.add(new_alien)
 
+
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        self.screen.fill(self.settings.bg_color)
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+        self.ship.blitme()
+        self.aliens.draw(self.screen)
+
+        pygame.display.flip()
+        
 if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()
