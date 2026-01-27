@@ -65,6 +65,18 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_alien_collisions()
+
+        if not self.aliens:
+        # Destroy existing bullets and create new fleet.
+            self.bullets.empty()
+            self._create_fleet()
+
+    def _check_bullet_alien_collisions(self):
+        """Respond to bullet-alien collisions."""
+        # Check for any bullets that have hit aliens. If so, get rid of the bullet and the alien.
+        collisions = pygame.sprite.groupcollide(self.aliens, self.bullets, True, True)
+
     def _check_keyup_events(self, event):
         """Check for keyboard releases."""
         if event.type == pygame.KEYUP:
@@ -116,6 +128,7 @@ class AlienInvasion:
         """Drop the entire fleet and change the fleet's direction."""
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
+
         self.settings.fleet_direction *= -1
 
     def _create_alien(self, x_position, y_position):

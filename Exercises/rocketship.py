@@ -29,6 +29,7 @@ class Rocket:
         self.moving_up = False
         self.moving_down = False
 
+
     def update(self):
         """Update the position of the rocket."""
         if self.moving_right and self.rect.right < self.screen_rect.right:
