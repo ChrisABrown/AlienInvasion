@@ -23,7 +23,7 @@ class GameStats:
         path = Path('high_score.json')
         try:
             contents = path.read_text()
-            high_score = json.load(contents)
+            high_score = json.loads(contents)
             return high_score
         except FileNotFoundError:
             return 0
