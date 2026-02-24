@@ -1,4 +1,7 @@
+import json
 import sys
+from pathlib import Path
+
 from settings import Settings
 import pygame
 from ship import Ship
@@ -65,7 +68,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
-            sys.exit()
+            self._game_over()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
 
@@ -253,6 +256,16 @@ class AlienInvasion:
 
             # Hide the mouse cursor.
             pygame.mouse.set_visible(False)
+
+    def _game_over(self):
+        """Saves the high score and closes out the game."""
+        current_high_score = self.stats.save_high_score()
+        if self.stats.high_score > current_high_score:
+            path = Path('high_score.json')
+            contents = json.dumps(self.stats.high_score)
+            path.write_text(contents)
+
+        sys.exit()
 
 
 if __name__ == '__main__':
